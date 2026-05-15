@@ -2,7 +2,9 @@ package lab.anubis.saasmultitenantapp.services.impl;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import lab.anubis.saasmultitenantapp.common.PageResponse;
 import lab.anubis.saasmultitenantapp.entities.Category;
+import lab.anubis.saasmultitenantapp.exceptions.DuplicateResourceException;
 import lab.anubis.saasmultitenantapp.mapper.CategoryMapper;
 import lab.anubis.saasmultitenantapp.repositories.CategoryRepository;
 import lab.anubis.saasmultitenantapp.requests.CategoryRequest;
@@ -10,6 +12,8 @@ import lab.anubis.saasmultitenantapp.responses.CategoryResponse;
 import lab.anubis.saasmultitenantapp.services.CategoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -48,9 +52,17 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<CategoryResponse> findAll() {
+    public List<CategoryResponse> findAllList() {
         return this.categoryRepository.findAll().stream()
                 .map(this.categoryMapper::toResponse).toList();
+    }
+
+    @Override
+    public PageResponse<CategoryResponse> findAll(final int page, final int size) {
+        final PageRequest pageRequest = PageRequest.of(page, size);
+        final Page<Category> categories = this.categoryRepository.findAll(pageRequest);
+        final Page<CategoryResponse> categoryResponses = categories.map(this.categoryMapper::toResponse);
+        return PageResponse.of(categoryResponses);
     }
 
     @Override
@@ -74,7 +86,7 @@ public class CategoryServiceImpl implements CategoryService {
         final Optional<Category> category = this.categoryRepository.findByNameIgnoreCase(name);
         if (category.isPresent()){
             log.debug("Category already exists");
-            throw new RuntimeException("Category already exists");
+            throw new DuplicateResourceException("Category already exists");
         }
 
     }

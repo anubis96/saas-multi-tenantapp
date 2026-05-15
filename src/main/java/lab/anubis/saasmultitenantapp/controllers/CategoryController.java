@@ -1,6 +1,7 @@
 package lab.anubis.saasmultitenantapp.controllers;
 
 import jakarta.validation.Valid;
+import lab.anubis.saasmultitenantapp.common.PageResponse;
 import lab.anubis.saasmultitenantapp.requests.CategoryRequest;
 import lab.anubis.saasmultitenantapp.responses.CategoryResponse;
 import lab.anubis.saasmultitenantapp.services.CategoryService;
@@ -36,10 +37,16 @@ public class CategoryController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping()
-    public ResponseEntity<List<CategoryResponse>> getAllCategory(){
-        return ResponseEntity.ok(this.service.findAll());
+    @GetMapping
+    public ResponseEntity<PageResponse<CategoryResponse>> findAllCategories(
+            @RequestParam(name = "page", defaultValue = "0")
+            final int page,
+            @RequestParam(name = "size", defaultValue = "10")
+            final int size
+    ) {
+        return ResponseEntity.ok(this.service.findAll(page, size));
     }
+
 
     @GetMapping("/{category-id}")
     public ResponseEntity<CategoryResponse> getCategoryById(

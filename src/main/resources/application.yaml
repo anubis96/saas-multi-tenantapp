@@ -23,7 +23,7 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     properties:
       hibernate:
         format_sql: true
@@ -50,11 +50,11 @@ spring:
 server:
   port: ${SERVER_PORT:8080}
 
-#app:
-#  jwt:
-#    private-key-path: ${JWT_PRIVATE_KEY_PATH:certs/private_key.pem}
-#    public-key-path: ${JWT_PUBLIC_KEY_PATH:certs/public_key.pem}
-#    access-token-expiration: ${JWT_ACCESS_TOKEN_EXPIRATION:86400000}
+app:
+  jwt:
+    private-key-path: ${JWT_PRIVATE_KEY_PATH:certs/private_key.pem}
+    public-key-path: ${JWT_PUBLIC_KEY_PATH:certs/public_key.pem}
+    access-token-expiration: ${JWT_ACCESS_TOKEN_EXPIRATION:86400000}
 
 springdoc:
   default-produces-media-type: application/json

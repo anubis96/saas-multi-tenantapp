@@ -1,4 +1,8 @@
-package lab.anubis.saasmultitenantapp.auth;
+package lab.anubis.saasmultitenantapp.auth.service;
 
-public class AuthenticationService {
+import lab.anubis.saasmultitenantapp.auth.requests.LoginRequest;
+import lab.anubis.saasmultitenantapp.auth.responses.LoginResponse;
+
+public interface AuthenticationService {
+    LoginResponse login(final LoginRequest request);
 }
